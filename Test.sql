@@ -129,3 +129,74 @@ AND c.title = 'Базы данных'
 AND s.s_id = e.s_id;
 
 
+--Сортировка
+/*
+Рекомендуется выполнять в конце запроса, перед получением результата
+
+Производится ключевым словом "ORDER BY"
+направления сортировки указываются:
+ASC - по возрастанию (по умолчанию);
+DESC - по убыванию
+ */
+
+ SELECT * FROM exams
+ORDER BY score DESC , s_id DESC , c_no;
+
+--Группировка
+/*
+При группировке в одной строке результата размещается значение,
+вычисленное на основании данных нескольких строк исходных таблиц.
+Также можно совместно использовать агрегатные функции.
+ */
+
+ SELECT count(*), count(DISTINCT s_id),
+        avg(score)
+FROM exams;
+
+--разбивка сгруппированная по курсу
+SELECT c_no, count(*),
+       count(DISTINCT s_id), avg(score)
+FROM exams
+GROUP BY c_no;
+
+--фильтрация
+/*
+WHERE - используется до группировки
+HAVING - после группировки
+ */
+
+ SELECT students.name
+FROM students, exams
+WHERE students.s_id = exams.s_id AND exams.score = 5
+ GROUP BY students.name
+HAVING count(*) > 1;
+
+UPDATE courses
+SET hours = hours * 4
+WHERE c_no = 'CS301';
+
+SELECT hours FROM courses
+WHERE c_no = 'CS301';
+
+DELETE FROM exams WHERE score < 5;
+
+CREATE TABLE groups(
+  g_no Text PRIMARY KEY ,
+  monitor INTEGER NOT NULL REFERENCES students(s_id)
+);
+
+ALTER TABLE students
+ADD g_no text REFERENCES groups(g_no);
+
+BEGIN ;
+
+INSERT INTO groups(g_no, monitor)
+SELECT 'A-101', s_id
+FROM students
+WHERE name = 'Анна';
+
+UPDATE students SET g_no = 'A-101';
+
+SELECT * FROM students;
+
+COMMIT ;
