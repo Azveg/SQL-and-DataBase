@@ -200,3 +200,4 @@ UPDATE students SET g_no = 'A-101';
 SELECT * FROM students;
 
 COMMIT ;
+
