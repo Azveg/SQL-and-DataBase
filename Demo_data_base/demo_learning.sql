@@ -63,9 +63,11 @@ WHERE status = 'Sceduled' OR status = 'On Time' OR status = 'Delayed';
 еще не прошли регистрацию, то есть не получили посадочный талон.
 Выведите имена этих пассажиров и номера рейсов.
 */
-
-
-
+SELECT flight_no, bp.boarding_no, t.passenger_name FROM flights
+  --ввожу псевдоним bp, далее нужно везде поменять имя таблицы на него
+LEFT JOIN boarding_passes bp ON flights.flight_id = bp.flight_id
+LEFT JOIN tickets t ON t.ticket_no = bp.ticket_no
+WHERE scheduled_departure = bookings.now() AND flight_no = 'PG0560';
 
 /*Упражнение 4.9. Выведите номера мест, оставшихся свободными в рейсах из Анапы (AAQ)
 в Шереметьево (SVO), вместе с номером рейса и его датой.
