@@ -67,9 +67,20 @@ SELECT flight_no, bp.boarding_no, t.passenger_name FROM flights
   --ввожу псевдоним bp, далее нужно везде поменять имя таблицы на него
 LEFT JOIN boarding_passes bp ON flights.flight_id = bp.flight_id
 LEFT JOIN tickets t ON t.ticket_no = bp.ticket_no
-WHERE scheduled_departure = bookings.now() AND flight_no = 'PG0560';
+WHERE scheduled_departure = bookings.now()
+  --задаю условие отсутствия брони
+  AND boarding_no IS NULL;
+
 
 /*Упражнение 4.9. Выведите номера мест, оставшихся свободными в рейсах из Анапы (AAQ)
 в Шереметьево (SVO), вместе с номером рейса и его датой.
 */
-
+--логика в том, что если место свободно, то после присоединения в бронировании оно будет null
+SELECT s.seat_no,
+       f.flight_no, f.scheduled_departure::date
+FROM seats s
+LEFT JOIN flights f ON s.aircraft_code = f.aircraft_code
+LEFT JOIN boarding_passes bp ON bp.flight_id = f.flight_id
+WHERE departure_airport = 'AAQ'
+  AND arrival_airport = 'SVO'
+  AND bp.seat_no IS NULL;
