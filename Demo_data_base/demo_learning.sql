@@ -154,13 +154,14 @@ VALUES  ('CN1','7A', 'Economy'),
 SELECT seat_no, fare_conditions FROM seats
 WHERE aircraft_code ='319' AND seat_no SIMILAR TO '[6-8]%';
 
---Обновил данные 1) выбрал таблицу
+--Обновил данные
+-- 1) выбрал таблицу
 -- 2) как преобразовать
 -- 3) задал регулярное выражение SIMILAR TO '[6-8]%'
 UPDATE seats SET fare_conditions = 'Business'
 WHERE seat_no SIMILAR TO '[6-8]%'
-      --вернул результат
-RETURNING fare_conditions;
+--вернул результат
+RETURNING "fare_conditions";
 
 /*
 Упражнение 4.16. Создайте новое бронирование текущей датой. В качестве номера брони-
@@ -171,4 +172,13 @@ RETURNING fare_conditions;
 через неделю, другой — обратно через две недели. Оба рейса выполняются эконом-
 классом, стоимость каждого должна составлять 15000 рублей.
 */
+INSERT INTO bookings.bookings (book_ref, book_date, total_amount)
+VALUES ('0000AZ', current_timestamp, 30000.00);
 
+SELECT * FROM bookings.tickets;
+
+INSERT INTO bookings.tickets (ticket_no, book_ref, passenger_id, passenger_name, contact_data)
+VALUES ('0015432069750', '0000AZ', '4856 914567','ANTON ZVEGINTSEV', '{"email": "anton.zvegintsev@gmail.com"}');
+
+SELECT * FROM bookings.tickets
+WHERE ticket_no = '0015432069750';
